@@ -1,0 +1,396 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ───────────────────────────────────────────────────────────────────────
+   Globals — variables that aren't worth bolting into Tailwind config.
+   These match the values in tailwind.config.js (kept in sync by hand).
+   ─────────────────────────────────────────────────────────────────────── */
+:root {
+  --bg:        #F1ECE4;
+  --bg-soft:   #E9E2D6;
+  --bg-card:   #FBF8F2;
+  --ink:       #1A1A18;
+  --ink-soft:  #3A3833;
+  --muted:     #76716A;
+  --line:      #D8D1C3;
+  --accent:    #8A6E47;
+  --accent-soft: #B49775;
+
+  --t-fast: 180ms cubic-bezier(.4,0,.2,1);
+  --t-med:  320ms cubic-bezier(.4,0,.2,1);
+  --t-slow: 600ms cubic-bezier(.22,.61,.36,1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: #FBF8F2;
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Type system — applied as helpers from Tailwind apply
+   ─────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .display {
+    font-family: 'Marcellus', Georgia, serif;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .italic-accent {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+  }
+  .eyebrow {
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+  }
+  .lede {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-weight: 300;
+  }
+
+  /* Single accent-line motif used everywhere */
+  .accent-line {
+    display: inline-block;
+    width: 48px;
+    height: 1px;
+    background: var(--accent);
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+
+  /* Container helpers (Tailwind's container is opt-in clunky) */
+  .container-x {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 32px;
+  }
+  @media (max-width: 640px) {
+    .container-x { padding-inline: 20px; }
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border: 1px solid transparent;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background var(--t-fast), color var(--t-fast),
+                border-color var(--t-fast), transform var(--t-fast);
+    text-decoration: none;
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .btn:hover { background: var(--accent); color: #FBF8F2; }
+
+  .btn-accent { background: var(--accent); color: #FBF8F2; }
+  .btn-accent:hover { background: var(--ink); color: var(--bg); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  .btn-ghost:hover {
+    background: var(--ink); color: var(--bg); border-color: var(--ink);
+  }
+
+  .btn-light {
+    background: transparent;
+    color: #FBF8F2;
+    border-color: rgba(251,248,242,.6);
+  }
+  .btn-light:hover {
+    background: #FBF8F2; color: #1A1A18; border-color: #FBF8F2;
+  }
+
+  .btn-small { padding: 10px 18px; font-size: 11px; }
+
+  .link {
+    font-family: 'Manrope', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 4px;
+    transition: color var(--t-fast), border-color var(--t-fast);
+    display: inline-block;
+  }
+  .link:hover { color: var(--accent); }
+
+  /* Rule line */
+  .rule { height: 1px; background: var(--line); border: 0; }
+
+  /* Image-slot — kept for any future placeholders, currently unused */
+  .img-slot {
+    position: relative;
+    background: var(--bg-soft);
+    overflow: hidden;
+  }
+  .img-real { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .img-real-wrap { width: 100%; height: 100%; overflow: hidden; }
+
+  /* Section padding helpers */
+  .stack-xl { padding-block: clamp(80px, 12vw, 140px); }
+  .stack-lg { padding-block: clamp(64px, 9vw, 110px); }
+  .stack-md { padding-block: clamp(48px, 7vw, 80px); }
+
+  /* Page transition — used as a wrapping div */
+  .page-enter { animation: pageIn var(--t-slow) both; }
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Nav — written longhand because the transparent → solid transition is
+   timed against scroll position and needs precise control.
+   ─────────────────────────────────────────────────────────────────────── */
+.nav {
+  position: fixed; inset: 0 0 auto 0;
+  z-index: 80;
+  padding: 22px 0;
+  transition: background var(--t-med), padding var(--t-med),
+              border-color var(--t-med);
+  border-bottom: 1px solid transparent;
+}
+.nav.solid {
+  background: color-mix(in oklab, var(--bg) 92%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 14px 0;
+  border-bottom-color: var(--line);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.brand {
+  display: flex; align-items: center; gap: 14px;
+  color: var(--bg);
+  transition: color var(--t-med);
+  text-decoration: none;
+}
+.nav.solid .brand,
+.drawer .brand { color: var(--ink); }
+.brand-mark-img {
+  width: 44px; height: 44px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  transition: filter var(--t-med);
+  flex-shrink: 0;
+}
+.nav.solid .brand-mark-img,
+.drawer .brand-mark-img { filter: none; }
+.footer .brand-mark-img {
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
+.brand-name {
+  font-family: 'Marcellus', Georgia, serif;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+.brand-name small {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  display: inline-block;
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 16px;
+  line-height: 1;
+  text-decoration: none;
+  position: relative;
+  opacity: 0.85;
+  transition: opacity var(--t-fast), color var(--t-fast);
+  -webkit-tap-highlight-color: rgba(255,255,255,0.08);
+}
+.nav.solid .nav-link { color: var(--ink); opacity: 0.7; }
+.nav-link:hover, .nav-link.active { opacity: 1; }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 16px; right: 16px;
+  bottom: 6px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-fast);
+  pointer-events: none;
+}
+.nav-link.active::after { transform: scaleX(1); }
+.nav-link:hover::after { transform: scaleX(1); }
+
+.nav-cta {
+  margin-left: 12px;
+  padding: 10px 20px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: #FBF8F2;
+  text-decoration: none;
+  transition: background var(--t-fast);
+}
+.nav-cta:hover { background: var(--ink); color: var(--bg); }
+
+.menu-toggle {
+  display: none;
+  width: 44px; height: 44px;
+  background: transparent; border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 980px) {
+  .nav-links, .nav-cta { display: none; }
+  .menu-toggle {
+    display: grid; place-items: center;
+    color: var(--bg);
+  }
+  .nav.solid .menu-toggle { color: var(--ink); }
+}
+
+/* Mobile drawer */
+.drawer {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 90;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transform: translateY(-100%);
+  pointer-events: none;
+  visibility: hidden;
+  transition: transform var(--t-med), visibility 0s linear var(--t-med);
+}
+.drawer.open {
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+  transition: transform var(--t-med), visibility 0s linear 0s;
+}
+.drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 32px;
+  border-bottom: 1px solid var(--line);
+}
+.drawer-links {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 48px 32px;
+}
+.drawer-link {
+  font-family: 'Marcellus', Georgia, serif;
+  font-size: 36px;
+  color: var(--ink);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+.drawer-link.active { color: var(--accent); }
+
+/* ───────────────────────────────────────────────────────────────────────
+   Lightbox (gallery)
+   ─────────────────────────────────────────────────────────────────────── */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(15, 14, 12, 0.94);
+  z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-med);
+}
+.lightbox.open { opacity: 1; pointer-events: auto; }
+.lightbox-img { max-width: 92vw; max-height: 88vh; object-fit: contain; }
+.lightbox-close, .lightbox-nav {
+  position: absolute;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.4);
+  color: #fff;
+  width: 48px; height: 48px;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+.lightbox-close:hover, .lightbox-nav:hover {
+  background: rgba(255,255,255,.1); border-color: #fff;
+}
+.lightbox-close { top: 24px; right: 24px; }
+.lightbox-nav.prev { left: 24px; top: 50%; transform: translateY(-50%); }
+.lightbox-nav.next { right: 24px; top: 50%; transform: translateY(-50%); }
+.lightbox-caption {
+  position: absolute; bottom: 24px; left: 0; right: 0;
+  text-align: center; color: rgba(255,255,255,.85);
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   WhatsApp float
+   ─────────────────────────────────────────────────────────────────────── */
+.wa-float {
+  position: fixed; right: 22px; bottom: 22px;
+  z-index: 70;
+  width: 56px; height: 56px;
+  background: #25D366;
+  color: #fff;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  box-shadow: 0 12px 30px -8px rgba(37,211,102,.55);
+  transition: transform var(--t-fast);
+  text-decoration: none;
+}
+.wa-float:hover { transform: scale(1.06); }
+
+/* ───────────────────────────────────────────────────────────────────────
+   Gallery hover caption
+   ─────────────────────────────────────────────────────────────────────── */
+.gallery-grid button:hover .gallery-caption-overlay { opacity: 1; }

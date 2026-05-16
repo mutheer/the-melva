@@ -1,0 +1,37 @@
+[build]
+  publish = "dist"
+  command = "npx vite build"
+
+# Netlify Functions live in netlify/functions/. The enquiry handler also
+# declares an explicit `config.path = '/api/enquiry'` so the function is
+# reachable at a clean URL (not /.netlify/functions/enquiry).
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# SPA fallback — serve index.html for client-side routes, EXCEPT for
+# function paths. The /api/* exclusion must come before the catch-all.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Cache static assets aggressively
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
